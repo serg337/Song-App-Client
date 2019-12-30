@@ -8,17 +8,13 @@ function SongCreate(props) {
   const [createSong] = useMutation(ADD_SONG);
   const [title, setTitle] = useState("");
 
-  const onSubmit = async event => {
-    try {
-      event.preventDefault();
-      await createSong({
-        variables: { title: title },
-        refetchQueries: [{ query: GET_SONGS }]
-      });
-      props.history.push("/");
-    } catch (error) {
-      return { error: "Input a title" };
-    }
+  const onSubmit = event => {
+    event.preventDefault();
+    createSong({
+      variables: { title: title },
+      refetchQueries: [{ query: GET_SONGS }]
+    });
+    props.history.push("/");
   };
 
   return (

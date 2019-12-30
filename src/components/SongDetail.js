@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useLazyQuery } from "@apollo/react-hooks";
+import LyricCreate from "./LyricCreate";
+import LyricList from "./LyricList";
 import GET_SONG from "../graphql/queries/fetchSong";
 
 function SongDetail() {
@@ -11,7 +13,11 @@ function SongDetail() {
 
   useEffect(() => {
     setSongId(params.id);
-    getSong({ variables: { id: songId } });
+    getSong({
+      variables: {
+        id: songId
+      }
+    });
     if (data && data.song) {
       setSong(data.song);
     }
@@ -23,7 +29,13 @@ function SongDetail() {
     return (
       <div>
         <Link to='/'>Back</Link>
-        {song && <h3>{song.title}</h3>}
+        {song && (
+          <div>
+            <h3>{song.title}</h3>
+            <LyricList lyrics={song.lyrics} />
+            <LyricCreate song={song.id} />
+          </div>
+        )}
       </div>
     );
   }
