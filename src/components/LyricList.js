@@ -1,17 +1,33 @@
 import React from "react";
+import { useMutation } from "@apollo/react-hooks";
+import CREATE_LIKE from "../graphql/mutations/createLike";
 
 function LyricList({ lyrics }) {
-  const onLike = id => {
-    console.log(id);
+  const [addLike] = useMutation(CREATE_LIKE);
+  const onLike = (id, likes) => {
+    addLike({
+      variables: { id: id },
+      optimisticResponse: {
+        __typename: "Mutation",
+        addLike: {
+          id: id,
+          __typename: "Lyric",
+          likes: likes + 1
+        }
+      }
+    });
   };
 
   const renderLyrics = () => {
-    return lyrics.map(({ id, content }) => (
+    return lyrics.map(({ id, content, likes }) => (
       <li className='collection-item' key={id}>
         {content}
-        <i onClick={() => onLike(id)} className='material-icons'>
-          thumb_up
-        </i>
+        <div className='vote-box'>
+          <i onClick={() => onLike(id, likes)} className='material-icons'>
+            thumb_up
+          </i>
+          {likes}
+        </div>
       </li>
     ));
   };
